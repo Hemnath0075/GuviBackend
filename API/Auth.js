@@ -6,7 +6,7 @@ require("dotenv").config();
 import { UserModel } from "../Models/User";
 
 import jwt from "jsonwebtoken";
-
+import { sendPasswordReset } from "../Utils/Email";
 
 const Router = express.Router();
 
@@ -86,7 +86,8 @@ Router.post("/forgotpassword", async (req, res) => {
       { email: req.body.email },
       { resetToken: resetToken, tokenExpiry: Date.now() + 3600000 },
       { new: true }
-    );
+      );
+    sendPasswordReset(req.body.email,resetToken);
     return res
       .status(200)
       .json({
